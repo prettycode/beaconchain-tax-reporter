@@ -1,5 +1,5 @@
 import axios from "axios";
-import { throttle } from "../../../utils/throttle";
+import { throttle } from "../utils/throttle";
 import { fileCache } from "../../fileCache";
 import { getUrl } from "../utils/getUrl";
 import { getHeaders } from "../utils/getHeaders";

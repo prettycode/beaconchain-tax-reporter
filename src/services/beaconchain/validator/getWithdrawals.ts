@@ -1,13 +1,14 @@
 import axios from "axios";
 import { BeaconChainWithdrawal } from "./BeaconChainWithdrawal";
-import { throttle } from "../../../utils/throttle";
+import { throttle } from "../utils/throttle";
 import { isEpochFinalized } from "../epoch/isEpochFinalized";
 import { fileCache } from "../../fileCache";
 import { getUrl } from "../utils/getUrl";
 import { getHeaders } from "../utils/getHeaders";
 
-export async function getWithdrawals(authKey: string, validatorIndices: Array<number>, epoch: number): Promise<Array<BeaconChainWithdrawal>>{
-    const useCache = typeof epoch === 'number' && await isEpochFinalized(authKey, epoch);
+export async function getWithdrawals(authKey: string, validatorIndices: Array<number>, epoch: number): Promise<Array<BeaconChainWithdrawal>> {
+    // Gets last 100 epochs, starting at `epoch`
+    const useCache = typeof epoch === 'number' && await isEpochFinalized(authKey, epoch - 99);
     const url = getUrl(`/validator/${validatorIndices.join(',')}/withdrawals?epoch=${epoch}`);
 
     if (useCache) {
@@ -29,4 +30,3 @@ export async function getWithdrawals(authKey: string, validatorIndices: Array<nu
 
     return results;
   }
-  

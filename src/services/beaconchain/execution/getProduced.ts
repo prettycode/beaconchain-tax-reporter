@@ -1,6 +1,6 @@
 import axios from "axios";
 import { BeaconChainExecutionProduced } from "./BeaconChainExecutionProduced";
-import { throttle } from "../../../utils/throttle";
+import { throttle } from "../utils/throttle";
 import { getUrl } from "../utils/getUrl";
 import { getHeaders } from "../utils/getHeaders";
 

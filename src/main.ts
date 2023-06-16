@@ -18,10 +18,11 @@ function getConfig(): { beaconchainApiKey: string, validatorEthAddress: string, 
         throw new Error('Missing `VALIDATOR_ETHADDRESS` environmental variable.');
     }
 
-    const startEpoch = +process.argv[2];
+    let startEpoch = +process.argv[2];
 
-    if (Number.isNaN(startEpoch)) {
-        throw new Error('Missing argument for epoch to start looking for income at.');
+    if (isNaN(startEpoch)) {
+        // The first epoch that withdrawals were enabled in 
+        startEpoch = 194516;
     }
 
     return {
@@ -50,5 +51,5 @@ export async function main() {
 
     const reportsPath = `.income-reports-${new Date().toISOString().substring(0, 10)}`;
     
-    writeIncomeReports(reportsPath, withdrawals, executions, withdrawalsAndExecutions);
+    await writeIncomeReports(reportsPath, withdrawals, executions, withdrawalsAndExecutions);
 }
