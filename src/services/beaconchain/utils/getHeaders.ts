@@ -1,10 +1,10 @@
 export function getHeaders(authKey: string) {
     if (!authKey) {
-        throw new Error(`\`authKey\` not provided: "${authKey}"`);
+        throw new Error(`\`authKey\` not provided.`);
     }
 
     return {
-        'Authorization': authKey,
+        Authorization: authKey,
         'Content-Type': 'application/json'
     };
 }
