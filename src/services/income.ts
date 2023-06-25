@@ -9,6 +9,7 @@ export type ValidatorIncome = {
     location: string;
     amountEth: number;
     timestamp: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     extended?: Record<string, any>;
     toString: () => string;
 } 
@@ -39,7 +40,7 @@ export async function getValidatorWithdrawals(authKey: string, startingEpoch: nu
     ) {
         const withdrawals = await getWithdrawals(authKey, validatorIndices, currentEpoch);
 
-        for (let withdrawal of withdrawals) {
+        for (const withdrawal of withdrawals) {
             const withdrawalSlot = await getSlot(authKey, withdrawal.slot);
 
             if (!withdrawalSlot) {

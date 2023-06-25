@@ -1,10 +1,8 @@
-import axios from "axios";
-import { throttle } from "../utils/throttle";
 import { fileCache } from "../../fileCache";
 import { BeaconChainEpoch } from "./BeaconChainEpoch";
 import { isEpochFinalized } from "./isEpochFinalized";
 import { getUrl } from "../utils/getUrl";
-import { getHeaders } from "../utils/getHeaders";
+import { get } from "../utils/get";
 
 export async function getEpoch(authKey: string, epoch: 'latest' | 'finalized' | number): Promise<BeaconChainEpoch> {
     const useCache = typeof epoch === 'number' && await isEpochFinalized(authKey, epoch);
@@ -18,10 +16,7 @@ export async function getEpoch(authKey: string, epoch: 'latest' | 'finalized' | 
         }
     }
 
-    const headers = getHeaders(authKey);
-    const promise = axios.get(url, { headers });
-    const throttled = await throttle(promise);
-    const results = throttled.data.data;
+    const results = await get<BeaconChainEpoch>(authKey, url);
 
     if (useCache) {
         fileCache.set<BeaconChainEpoch>(url, results);
