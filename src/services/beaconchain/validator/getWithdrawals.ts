@@ -1,10 +1,8 @@
-import axios from "axios";
 import { BeaconChainWithdrawal } from "./BeaconChainWithdrawal";
-import { throttle } from "../utils/throttle";
 import { isEpochFinalized } from "../epoch/isEpochFinalized";
 import { fileCache } from "../../fileCache";
 import { getUrl } from "../utils/getUrl";
-import { getHeaders } from "../utils/getHeaders";
+import { get } from "../utils/get";
 
 export async function getWithdrawals(authKey: string, validatorIndices: Array<number>, epoch: number): Promise<Array<BeaconChainWithdrawal>> {
     // Gets last 100 epochs, starting at `epoch`
@@ -19,10 +17,7 @@ export async function getWithdrawals(authKey: string, validatorIndices: Array<nu
         }
     }
 
-    const headers = getHeaders(authKey);
-    const promise = axios.get(url, { headers });
-    const throttled = await throttle(promise);
-    const results = throttled.data.data;
+    const results = await get<Array<BeaconChainWithdrawal>>(authKey, url);
 
     if (useCache) {
         fileCache.set<Array<BeaconChainWithdrawal>>(url, results);

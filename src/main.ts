@@ -1,4 +1,9 @@
-import { ValidatorIncome,  getValidatorExecutions, getValidatorIndicesForEthAddress, getValidatorWithdrawals, sortValidatorIncomeByTimestampDesc } from './services/income';
+import { 
+    getValidatorExecutions, 
+    getValidatorIndicesForEthAddress, 
+    getValidatorWithdrawals, 
+    sortValidatorIncomeByTimestampDesc 
+} from './services/income';
 import { getEpoch } from './services/beaconchain/epoch/getEpoch';
 import { writeIncomeReports } from './writeIncomeReports';
 import dotenv from 'dotenv';
