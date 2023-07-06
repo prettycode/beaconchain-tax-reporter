@@ -1,6 +1,6 @@
-import { BeaconChainExecutionProduced } from "./BeaconChainExecutionProduced";
-import { getUrl } from "../utils/getUrl";
-import { get } from "../utils/get";
+import { BeaconChainExecutionProduced } from './BeaconChainExecutionProduced';
+import { getUrl } from '../utils/getUrl';
+import { get } from '../utils/get';
 
 export async function getProduced(authKey: string, validatorIndices: Array<number>): Promise<Array<BeaconChainExecutionProduced>> {
     // TODO offset and limit?

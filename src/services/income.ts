@@ -1,7 +1,7 @@
-import { getProduced } from "./beaconchain/execution/getProduced";
-import { getSlot } from "./beaconchain/slot/getSlot";
-import { getValidators } from "./beaconchain/validator/getValidators";
-import { getWithdrawals } from "./beaconchain/validator/getWithdrawals";
+import { getProduced } from './beaconchain/execution/getProduced';
+import { getSlot } from './beaconchain/slot/getSlot';
+import { getValidators } from './beaconchain/validator/getValidators';
+import { getWithdrawals } from './beaconchain/validator/getWithdrawals';
 
 export type ValidatorIncome = {
     type: 'execution' | 'withdrawal';
@@ -12,9 +12,9 @@ export type ValidatorIncome = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     extended?: Record<string, any>;
     toString: () => string;
-} 
+}
 
-export const sortValidatorIncomeByTimestampDesc = (a: ValidatorIncome, b: ValidatorIncome) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+export const sortValidatorIncomeByTimestampDesc = (a: ValidatorIncome, b: ValidatorIncome): number => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
 
 export async function getValidatorIndicesForEthAddress(authKey: string, ethAddres: string): Promise<Array<number>> {
     console.log(`\nLooking for validator(s) for ETH address ${ethAddres}...`);
@@ -34,8 +34,8 @@ export async function getValidatorWithdrawals(authKey: string, startingEpoch: nu
     console.log(`\nLooking for withdrawal payouts for validator(s) ${validatorIndices.join(', ')} between epochs ${startingEpoch} and ${endEpoch} (inclusive)...`);
 
     for (
-        let currentEpoch = startingEpoch; 
-        currentEpoch <= endEpoch + EPOCHS_PER_API_REQUEST; 
+        let currentEpoch = startingEpoch;
+        currentEpoch <= endEpoch + EPOCHS_PER_API_REQUEST;
         currentEpoch += EPOCHS_PER_API_REQUEST
     ) {
         const withdrawals = await getWithdrawals(authKey, validatorIndices, currentEpoch);
@@ -60,7 +60,7 @@ export async function getValidatorWithdrawals(authKey: string, startingEpoch: nu
                     slot: withdrawal.slot,
                     withdrawalIndex: withdrawal.withdrawalindex,
                     raw: withdrawal,
-                    toString: function() {
+                    toString: function(): string {
                         return JSON.stringify(this, null, '    ');
                     }
                 }
@@ -80,7 +80,7 @@ export async function getValidatorExecutions(authKey: string, validatorIndices: 
 
     const executions = await getProduced(authKey, validatorIndices);
     const executionHistory: Array<ValidatorIncome> = executions
-        .map(execution => { 
+        .map(execution => {
             return {
                 type: 'execution',
                 validatorIndex: execution.posConsensus.proposerIndex,
@@ -95,7 +95,7 @@ export async function getValidatorExecutions(authKey: string, validatorIndices: 
                     feeRecipient: execution.feeRecipient,
                     producerFeeRecipient: execution.relay?.producerFeeRecipient,
                     raw: execution,
-                    toString: function() {
+                    toString: function(): string {
                         return JSON.stringify(this, null, '    ');
                     }
                 }

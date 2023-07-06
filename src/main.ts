@@ -1,8 +1,8 @@
-import { 
-    getValidatorExecutions, 
-    getValidatorIndicesForEthAddress, 
-    getValidatorWithdrawals, 
-    sortValidatorIncomeByTimestampDesc 
+import {
+    getValidatorExecutions,
+    getValidatorIndicesForEthAddress,
+    getValidatorWithdrawals,
+    sortValidatorIncomeByTimestampDesc
 } from './services/income';
 import { getEpoch } from './services/beaconchain/epoch/getEpoch';
 import { writeIncomeReports } from './writeIncomeReports';
@@ -18,7 +18,7 @@ function getConfig(): { beaconchainApiKey: string, validatorEthAddress: string, 
     }
 
     const validatorEthAddress = process.env.VALIDATOR_ETHADDRESS;
-    
+
     if (!validatorEthAddress) {
         throw new Error('Missing `VALIDATOR_ETHADDRESS` environmental variable.');
     }
@@ -26,7 +26,7 @@ function getConfig(): { beaconchainApiKey: string, validatorEthAddress: string, 
     let startEpoch = +process.argv[2];
 
     if (isNaN(startEpoch)) {
-        // The first epoch that withdrawals were enabled in 
+        // The first epoch that withdrawals were enabled in
         startEpoch = 194516;
     }
 
@@ -37,13 +37,13 @@ function getConfig(): { beaconchainApiKey: string, validatorEthAddress: string, 
     };
 }
 
-export async function main() {
-    const { 
-        beaconchainApiKey, 
+export async function main(): Promise<void> {
+    const {
+        beaconchainApiKey,
         validatorEthAddress,
         startEpoch
     } = getConfig();
-    
+
     const latestFinalizedEpoch = (await getEpoch(beaconchainApiKey, 'finalized')).epoch;
     const validatorIndices = await getValidatorIndicesForEthAddress(beaconchainApiKey, validatorEthAddress);
     const withdrawals = await getValidatorWithdrawals(beaconchainApiKey, startEpoch, validatorIndices, latestFinalizedEpoch);
@@ -55,6 +55,6 @@ export async function main() {
     withdrawalsAndExecutions.sort(sortValidatorIncomeByTimestampDesc);
 
     const reportsPath = `.income-reports-${new Date().toISOString().substring(0, 10)}`;
-    
+
     await writeIncomeReports(reportsPath, withdrawals, executions, withdrawalsAndExecutions);
 }

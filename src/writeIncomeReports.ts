@@ -4,18 +4,18 @@ import { convertToCsv } from './utils/convertToCsv';
 import fs from 'fs';
 
 export async function writeIncomeReports(
-    filePath: string, 
-    withdrawals: Array<ValidatorIncome>, 
-    executions: Array<ValidatorIncome>, 
+    filePath: string,
+    withdrawals: Array<ValidatorIncome>,
+    executions: Array<ValidatorIncome>,
     withdrawalsAndExecutions: Array<ValidatorIncome>
-) {
+): Promise<void> {
     if (fs.existsSync(filePath)) {
-        fs.rmSync(filePath, { 
-            recursive: true, 
+        fs.rmSync(filePath, {
+            recursive: true,
             force: true
         });
     }
-    
+
     fs.mkdirSync(filePath);
 
     await Promise.all([
@@ -32,10 +32,10 @@ export async function writeIncomeReportValidatorWithdrawals(filePath: string, wi
     for(const validatorIndex of validatorIndices) {
         const filename = `${filePath}/${validatorIndex}.withdrawals.csv`;
         const fileContents = convertToCsv(withdrawals.filter(income => income.validatorIndex === validatorIndex));
-        
+
         await fs.promises.writeFile(filename, fileContents, 'utf-8');
     }
-    
+
     await fs.promises.writeFile(`${filePath}/${validatorIndices.join(',')}.withdrawals.csv`, convertToCsv(withdrawals), 'utf-8');
 }
 
@@ -45,10 +45,10 @@ export async function writeIncomeReportValidatorExecution(filePath: string, exec
     for(const validatorIndex of validatorIndices) {
         const filename = `${filePath}/${validatorIndex}.execution.csv`;
         const fileContents = convertToCsv(executions.filter(income => income.validatorIndex === validatorIndex));
-        
+
         await fs.promises.writeFile(filename, fileContents, 'utf-8');
     }
-    
+
     await fs.promises.writeFile(`${filePath}/${validatorIndices.join(',')}.execution.csv`, convertToCsv(executions), 'utf-8');
 }
 
@@ -58,10 +58,10 @@ export async function writeIncomeReportValidatorWithdrawalsAndExecutions(filePat
     for(const validatorIndex of validatorIndices) {
         const filename = `${filePath}/${validatorIndex}.csv`;
         const fileContents = convertToCsv(withdrawalsAndExecutions.filter(income => income.validatorIndex === validatorIndex));
-        
+
         await fs.promises.writeFile(filename, fileContents, 'utf-8');
     }
-    
+
     await fs.promises.writeFile(`${filePath}/${validatorIndices.join(',')}.csv`, convertToCsv(withdrawalsAndExecutions), 'utf-8');
 }
 
@@ -71,5 +71,5 @@ export async function writeIncomeReportCombinedValidatorTaxes(filePath: string, 
         ...executions.map(executionIncomeToCoinTrackingRecord)
     ].sort((a: CoinTrackingRecord, b: CoinTrackingRecord) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-    await fs.promises.writeFile(`${filePath}/cointracking.info bulk import.csv`, convertToCsv(taxHistory), 'utf-8');    
+    await fs.promises.writeFile(`${filePath}/cointracking.info bulk import.csv`, convertToCsv(taxHistory), 'utf-8');
 }

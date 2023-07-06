@@ -1,9 +1,9 @@
-import axios from "axios";
-import { throttle } from "../utils/throttle";
-import { fileCache } from "../../fileCache";
-import { getUrl } from "../utils/getUrl";
-import { getHeaders } from "../utils/getHeaders";
-import { BeaconChainSlot } from "./BeaconChainSlot";
+import axios from 'axios';
+import { throttle } from '../utils/throttle';
+import { fileCache } from '../../fileCache';
+import { getUrl } from '../utils/getUrl';
+import { getHeaders } from '../utils/getHeaders';
+import { BeaconChainSlot } from './BeaconChainSlot';
 
 export async function getSlot(authKey: string, slotOrHash: number | string): Promise<BeaconChainSlot | null> {
     const url = getUrl(`/slot/${slotOrHash}`);
@@ -19,7 +19,7 @@ export async function getSlot(authKey: string, slotOrHash: number | string): Pro
     const results = throttled.data.data;
 
     // Slot exists and is finalized
-    if (results !== null && results.status === "1") {
+    if (results !== null && results.status === '1') {
         fileCache.set<BeaconChainSlot>(url, results);
     }
 

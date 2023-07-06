@@ -1,12 +1,12 @@
-import { hashCode } from "../utils/hash";
+import { hashCode } from '../utils/hash';
 import fs from 'fs';
 
 const CACHE_PATH = './.cache';
 
 const memoryCache: Record<string, string> = {};
 
-const urlPathToSafeFilename = (urlPath: string) => encodeURIComponent(urlPath); //urlPath.replace(/[?\/:*"<>|]/g, '#'); // make safe filename on Windows
-const getFilenameSafeCacheKey = (urlPath: string) => `./${CACHE_PATH}/${urlPathToSafeFilename(urlPath)}.${hashCode(urlPath)}.json`
+const urlPathToSafeFilename = (urlPath: string): string => encodeURIComponent(urlPath); //urlPath.replace(/[?\/:*"<>|]/g, '#'); // make safe filename on Windows
+const getFilenameSafeCacheKey = (urlPath: string): string => `./${CACHE_PATH}/${urlPathToSafeFilename(urlPath)}.${hashCode(urlPath)}.json`
 
 if (!fs.existsSync(CACHE_PATH)) {
     fs.mkdirSync(CACHE_PATH);
@@ -25,7 +25,7 @@ export class fileCache {
                 // console.info(`> Not cached: ${url}`);
                 return undefined;
             }
-            
+
             cacheContents = await fs.promises.readFile(cacheKey, 'utf-8');
             memoryCache[cacheKey] = cacheContents;
         }
