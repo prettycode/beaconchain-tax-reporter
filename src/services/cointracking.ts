@@ -1,4 +1,4 @@
-import { ValidatorIncome } from "./income";
+import { ValidatorIncome } from './income';
 
 export type CoinTrackingRecord = {
     type: 'Income';
@@ -30,16 +30,16 @@ function createCoinTrackingRecordFromValidatorIncome({amountEth, date, comment}:
 
 export function withdrawalIncomeToCoinTrackingRecord(withdrawal: ValidatorIncome): CoinTrackingRecord {
     return createCoinTrackingRecordFromValidatorIncome({
-        amountEth: withdrawal.amountEth, 
-        date: withdrawal.timestamp, 
+        amountEth: withdrawal.amountEth,
+        date: withdrawal.timestamp,
         comment: `Validator ${withdrawal.validatorIndex}, withdrawal ${withdrawal.extended?.withdrawalIndex}, epoch ${withdrawal.extended?.epoch}`
     });
 }
 
 export function executionIncomeToCoinTrackingRecord(execution: ValidatorIncome): CoinTrackingRecord {
     return createCoinTrackingRecordFromValidatorIncome({
-        amountEth: execution.amountEth, 
-        date: execution.timestamp, 
+        amountEth: execution.amountEth,
+        date: execution.timestamp,
         comment: `Validator ${execution.validatorIndex}, producer reward, block ${execution.extended?.blockNumber}`
     });
 }

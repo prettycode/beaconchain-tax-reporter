@@ -1,6 +1,6 @@
-export function getHeaders(authKey: string) {
+export function getHeaders(authKey: string): Record<string, string> {
     if (!authKey) {
-        throw new Error(`\`authKey\` not provided.`);
+        throw new Error('`authKey` not provided.');
     }
 
     return {

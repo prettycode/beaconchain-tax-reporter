@@ -1,2 +1,2 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const convertToCsv = (array: Array<Record<string, any>>) => [Object.keys(array[0]), ...array.map(item => '"' + Object.values(item).map(item => item.toString().replace(/"/g, "'")).join('","') + '"')].join('\n');
+export const convertToCsv = (array: Array<Record<string, any>>): string => [Object.keys(array[0]), ...array.map(item => '"' + Object.values(item).map(item => item.toString().replace(/"/g, '\'')).join('","') + '"')].join('\n');

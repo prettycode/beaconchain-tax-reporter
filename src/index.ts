@@ -1,3 +1,3 @@
-import { main } from "./main";
+import { main } from './main';
 
-(async () => await main())();
+(async (): Promise<void> => await main())();

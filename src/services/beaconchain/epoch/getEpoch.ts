@@ -1,8 +1,8 @@
-import { fileCache } from "../../fileCache";
-import { BeaconChainEpoch } from "./BeaconChainEpoch";
-import { isEpochFinalized } from "./isEpochFinalized";
-import { getUrl } from "../utils/getUrl";
-import { get } from "../utils/get";
+import { fileCache } from '../../fileCache';
+import { BeaconChainEpoch } from './BeaconChainEpoch';
+import { isEpochFinalized } from './isEpochFinalized';
+import { getUrl } from '../utils/getUrl';
+import { get } from '../utils/get';
 
 export async function getEpoch(authKey: string, epoch: 'latest' | 'finalized' | number): Promise<BeaconChainEpoch> {
     const useCache = typeof epoch === 'number' && await isEpochFinalized(authKey, epoch);

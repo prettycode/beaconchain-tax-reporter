@@ -2,7 +2,7 @@ This is a tool that takes an ETH address, having one or more validators, and out
 
 These "income reports" are simple `.csv` files.
 
-The data used to generate these CSVs comes from [beaconcha.in](https://beaconcha.in)'s APIs. 
+The data used to generate these CSVs comes from [beaconcha.in](https://beaconcha.in)'s APIs.
 
 Set the following environmental variables prior to running this tool:
 

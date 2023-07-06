@@ -1,4 +1,4 @@
-import { getEpoch } from "./getEpoch";
+import { getEpoch } from './getEpoch';
 
 let finalizedEpoch: number | undefined;
 
