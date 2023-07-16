@@ -1,4 +1,5 @@
 import {
+    ValidatorIncome,
     getValidatorExecutions,
     getValidatorIndicesForEthAddress,
     getValidatorWithdrawals,
@@ -6,9 +7,35 @@ import {
 } from './services/income';
 import { getEpoch } from './services/beaconchain/epoch/getEpoch';
 import { writeIncomeReports } from './writeIncomeReports';
+import { parse } from 'ts-command-line-args';
 import dotenv from 'dotenv';
 
-function getConfig(): { beaconchainApiKey: string, validatorEthAddress: string, startEpoch: number } {
+type CommandLineArgs = {
+    withdrawalsStartEpoch?: number,
+    ignoreRecordsBeforeInclusive?: string
+};
+
+type AppConfig = {
+    beaconchainApiKey: string;
+    validatorEthAddress: string;
+    withdrawalsStartEpoch: number;
+    ignoreRecordsBeforeInclusive: number;
+};
+
+function getCommandLineArgs(): CommandLineArgs {
+    return parse<CommandLineArgs>({
+        withdrawalsStartEpoch: {
+            type: Number,
+            optional: true
+        },
+        ignoreRecordsBeforeInclusive: {
+            type: String,
+            optional: true
+        }
+    });
+}
+
+function getAppConfig(): AppConfig {
     dotenv.config();
 
     const beaconchainApiKey = process.env.BEACONCHAIN_APIKEY;
@@ -23,31 +50,41 @@ function getConfig(): { beaconchainApiKey: string, validatorEthAddress: string, 
         throw new Error('Missing `VALIDATOR_ETHADDRESS` environmental variable.');
     }
 
-    let startEpoch = +process.argv[2];
+    const args = getCommandLineArgs();
 
-    if (isNaN(startEpoch)) {
+    let withdrawalsStartEpoch = Number(args.withdrawalsStartEpoch);
+
+    if (isNaN(withdrawalsStartEpoch) || withdrawalsStartEpoch === 0) {
         // The first epoch that withdrawals were enabled in
-        startEpoch = 194516;
+        withdrawalsStartEpoch = 194516;
     }
+
+    const ignoreRecordsBeforeInclusive = new Date(args.ignoreRecordsBeforeInclusive || 0).getTime();
 
     return {
         beaconchainApiKey,
         validatorEthAddress,
-        startEpoch
+        withdrawalsStartEpoch,
+        ignoreRecordsBeforeInclusive
     };
 }
 
 export async function main(): Promise<void> {
+    const appConfig = getAppConfig();
     const {
         beaconchainApiKey,
         validatorEthAddress,
-        startEpoch
-    } = getConfig();
+        withdrawalsStartEpoch,
+        ignoreRecordsBeforeInclusive
+    } = appConfig;
 
+    console.log('Configuration =', appConfig);
+
+    const filterByStartDateExclsuive = (incomeRecord: ValidatorIncome): boolean => new Date(incomeRecord.timestamp).getTime() > ignoreRecordsBeforeInclusive;
     const latestFinalizedEpoch = (await getEpoch(beaconchainApiKey, 'finalized')).epoch;
     const validatorIndices = await getValidatorIndicesForEthAddress(beaconchainApiKey, validatorEthAddress);
-    const withdrawals = await getValidatorWithdrawals(beaconchainApiKey, startEpoch, validatorIndices, latestFinalizedEpoch);
-    const executions = await getValidatorExecutions(beaconchainApiKey, validatorIndices);
+    const withdrawals = (await getValidatorWithdrawals(beaconchainApiKey, withdrawalsStartEpoch, validatorIndices, latestFinalizedEpoch)).filter(filterByStartDateExclsuive);
+    const executions = (await getValidatorExecutions(beaconchainApiKey, validatorIndices)).filter(filterByStartDateExclsuive);
     const withdrawalsAndExecutions = [...withdrawals, ...executions];
 
     withdrawals.sort(sortValidatorIncomeByTimestampDesc);
@@ -56,5 +93,5 @@ export async function main(): Promise<void> {
 
     const reportsPath = `.income-reports-${new Date().toISOString().substring(0, 10)}`;
 
-    await writeIncomeReports(reportsPath, withdrawals, executions, withdrawalsAndExecutions);
+    await writeIncomeReports(reportsPath, validatorIndices, withdrawals, executions, withdrawalsAndExecutions);
 }

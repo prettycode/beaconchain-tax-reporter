@@ -5,6 +5,7 @@ import fs from 'fs';
 
 export async function writeIncomeReports(
     filePath: string,
+    validatorIndices: Array<number>,
     withdrawals: Array<ValidatorIncome>,
     executions: Array<ValidatorIncome>,
     withdrawalsAndExecutions: Array<ValidatorIncome>
@@ -19,15 +20,17 @@ export async function writeIncomeReports(
     fs.mkdirSync(filePath);
 
     await Promise.all([
-        writeIncomeReportValidatorWithdrawals(filePath, withdrawals),
-        writeIncomeReportValidatorExecution(filePath, executions),
-        writeIncomeReportValidatorWithdrawalsAndExecutions(filePath, withdrawalsAndExecutions),
+        writeIncomeReportValidatorWithdrawals(filePath, validatorIndices, withdrawals),
+        writeIncomeReportValidatorExecution(filePath, validatorIndices, executions),
+        writeIncomeReportValidatorWithdrawalsAndExecutions(filePath, validatorIndices, withdrawalsAndExecutions),
         writeIncomeReportCombinedValidatorTaxes(filePath, withdrawals, executions)
     ]);
 }
 
-export async function writeIncomeReportValidatorWithdrawals(filePath: string, withdrawals: Array<ValidatorIncome>): Promise<void> {
-    const validatorIndices: Array<number> = [...new Set(withdrawals.map(validatior => validatior.validatorIndex))];
+export async function writeIncomeReportValidatorWithdrawals(filePath: string, validatorIndices: Array<number>, withdrawals: Array<ValidatorIncome>): Promise<void> {
+    if (!validatorIndices.length) {
+        throw new Error('Missing validator indices.');
+    }
 
     for(const validatorIndex of validatorIndices) {
         const filename = `${filePath}/${validatorIndex}.withdrawals.csv`;
@@ -39,8 +42,10 @@ export async function writeIncomeReportValidatorWithdrawals(filePath: string, wi
     await fs.promises.writeFile(`${filePath}/${validatorIndices.join(',')}.withdrawals.csv`, convertToCsv(withdrawals), 'utf-8');
 }
 
-export async function writeIncomeReportValidatorExecution(filePath: string, executions: Array<ValidatorIncome>): Promise<void> {
-    const validatorIndices: Array<number> = [...new Set(executions.map(execution => execution.validatorIndex))];
+export async function writeIncomeReportValidatorExecution(filePath: string, validatorIndices: Array<number>, executions: Array<ValidatorIncome>): Promise<void> {
+    if (!validatorIndices.length) {
+        throw new Error('Missing validator indices.');
+    }
 
     for(const validatorIndex of validatorIndices) {
         const filename = `${filePath}/${validatorIndex}.execution.csv`;
@@ -52,8 +57,10 @@ export async function writeIncomeReportValidatorExecution(filePath: string, exec
     await fs.promises.writeFile(`${filePath}/${validatorIndices.join(',')}.execution.csv`, convertToCsv(executions), 'utf-8');
 }
 
-export async function writeIncomeReportValidatorWithdrawalsAndExecutions(filePath: string, withdrawalsAndExecutions: Array<ValidatorIncome>): Promise<void> {
-    const validatorIndices: Array<number> = [...new Set(withdrawalsAndExecutions.map(execution => execution.validatorIndex))];
+export async function writeIncomeReportValidatorWithdrawalsAndExecutions(filePath: string, validatorIndices: Array<number>, withdrawalsAndExecutions: Array<ValidatorIncome>): Promise<void> {
+    if (!validatorIndices.length) {
+        throw new Error('Missing validator indices.');
+    }
 
     for(const validatorIndex of validatorIndices) {
         const filename = `${filePath}/${validatorIndex}.csv`;
