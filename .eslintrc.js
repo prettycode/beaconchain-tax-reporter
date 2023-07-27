@@ -23,6 +23,10 @@ module.exports = {
             'error',
             'single'
         ],
+        'semi': [
+            'error',
+            'always'
+        ]
         // TODO: resolve
         /*'max-len': [
             'error',

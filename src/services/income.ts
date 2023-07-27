@@ -79,7 +79,8 @@ export async function getValidatorExecutions(authKey: string, validatorIndices: 
     console.log(`\nLooking for block production payouts for validator(s) ${validatorIndices.join(', ')}...`);
 
     const executions = await getProduced(authKey, validatorIndices);
-    const executionHistory: Array<ValidatorIncome> = executions
+    const executionsByTimestampAsc = executions.sort((a, b) => a.timestamp - b.timestamp);
+    const executionHistory: Array<ValidatorIncome> = executionsByTimestampAsc
         .map(execution => {
             return {
                 type: 'execution',
