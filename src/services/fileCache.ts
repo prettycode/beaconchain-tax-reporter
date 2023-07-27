@@ -5,7 +5,7 @@ const CACHE_PATH = './.cache';
 
 const memoryCache: Record<string, string> = {};
 
-const urlPathToSafeFilename = (urlPath: string): string => encodeURIComponent(urlPath); //urlPath.replace(/[?\/:*"<>|]/g, '#'); // make safe filename on Windows
+const urlPathToSafeFilename = (urlPath: string): string => encodeURIComponent(urlPath);
 const getFilenameSafeCacheKey = (urlPath: string): string => `./${CACHE_PATH}/${urlPathToSafeFilename(urlPath)}.${hashCode(urlPath)}.json`;
 
 if (!fs.existsSync(CACHE_PATH)) {
@@ -13,7 +13,6 @@ if (!fs.existsSync(CACHE_PATH)) {
 }
 
 export class fileCache {
-
     public static async get<TReturn>(url: string): Promise<TReturn | undefined> {
         const cacheKey = getFilenameSafeCacheKey(url);
         let cacheContents: string | undefined = memoryCache[cacheKey];
@@ -41,5 +40,4 @@ export class fileCache {
 
         await fs.promises.writeFile(cacheKey, cacheContents, 'utf-8');
     }
-
 }

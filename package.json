@@ -1,8 +1,11 @@
 {
     "scripts": {
-        "lint": "npx eslint .",
-        "fix": "npm audit fix && npm run lint -- --fix",
-        "build": "npm ci && npm audit && npm run lint",
+        "prettier:check": "npx prettier . --check",
+        "prettier:fix": "npx prettier . --write",
+        "lint:check": "npx eslint .",
+        "lint:fix": "npx eslint . --fix",
+        "fix": "npm audit fix && npm run lint:fix && npm run prettier:fix",
+        "build": "npm ci && npm audit && npm run lint:check && npm run prettier:check",
         "start": "npm run build && ts-node src/index.ts",
         "start:new-only": "npm start -- --ignoreRecordsBeforeInclusive=2023-06-28T17:41:35Z"
     },
@@ -12,6 +15,7 @@
         "@typescript-eslint/parser": "^5.59.11",
         "eslint": "^8.43.0",
         "npm": "^9.8.0",
+        "prettier": "^3.0.0",
         "ts-command-line-args": "^2.5.1",
         "ts-node": "^10.9.1",
         "typescript": "^5.1.3"

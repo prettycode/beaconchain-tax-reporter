@@ -6,10 +6,11 @@ import { get } from '../utils/get';
 
 export async function getWithdrawals(
     authKey: string,
-    validatorIndices: Array<number>, epoch: number
+    validatorIndices: Array<number>,
+    epoch: number
 ): Promise<Array<BeaconChainWithdrawal>> {
     // Gets last 100 epochs, starting at `epoch`
-    const useCache = typeof epoch === 'number' && await isEpochFinalized(authKey, epoch - 99);
+    const useCache = typeof epoch === 'number' && (await isEpochFinalized(authKey, epoch - 99));
     const url = getUrl(`/validator/${validatorIndices.join(',')}/withdrawals?epoch=${epoch}`);
 
     if (useCache) {

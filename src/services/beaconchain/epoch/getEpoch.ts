@@ -5,7 +5,7 @@ import { getUrl } from '../utils/getUrl';
 import { get } from '../utils/get';
 
 export async function getEpoch(authKey: string, epoch: 'latest' | 'finalized' | number): Promise<BeaconChainEpoch> {
-    const useCache = typeof epoch === 'number' && await isEpochFinalized(authKey, epoch);
+    const useCache = typeof epoch === 'number' && (await isEpochFinalized(authKey, epoch));
     const url = getUrl(`/epoch/${epoch}`);
 
     if (useCache) {

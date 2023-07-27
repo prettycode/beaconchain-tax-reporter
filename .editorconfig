@@ -1,3 +1,6 @@
 [*]
+max_line_length = 140
 guidelines = 140
 guidelines_style = 1px solid 40ff0000
+indent_style = space
+indent_size = 4
