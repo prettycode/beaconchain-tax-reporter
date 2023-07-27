@@ -15,7 +15,7 @@ type CommandLineArgs = {
     ignoreRecordsBeforeInclusive?: string
 };
 
-type AppConfig = {
+export type AppConfig = {
     beaconchainApiKey: string;
     validatorEthAddress: string;
     withdrawalsStartEpoch: number;
@@ -71,14 +71,15 @@ function getAppConfig(): AppConfig {
 
 export async function main(): Promise<void> {
     const appConfig = getAppConfig();
+
+    console.log('Configuration =', appConfig);
+
     const {
         beaconchainApiKey,
         validatorEthAddress,
         withdrawalsStartEpoch,
         ignoreRecordsBeforeInclusive
     } = appConfig;
-
-    console.log('Configuration =', appConfig);
 
     const filterByStartDateExclsuive = (incomeRecord: ValidatorIncome): boolean => new Date(incomeRecord.timestamp).getTime() > ignoreRecordsBeforeInclusive;
     const latestFinalizedEpoch = (await getEpoch(beaconchainApiKey, 'finalized')).epoch;
@@ -91,7 +92,5 @@ export async function main(): Promise<void> {
     executions.sort(sortValidatorIncomeByTimestampDesc);
     withdrawalsAndExecutions.sort(sortValidatorIncomeByTimestampDesc);
 
-    const reportsPath = `.income-reports-${new Date().toISOString().substring(0, 10)}`;
-
-    await writeIncomeReports(reportsPath, validatorIndices, withdrawals, executions, withdrawalsAndExecutions);
+    await writeIncomeReports(appConfig, validatorIndices, withdrawals, executions, withdrawalsAndExecutions);
 }

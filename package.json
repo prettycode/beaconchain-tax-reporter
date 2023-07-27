@@ -4,7 +4,7 @@
         "fix": "npm audit fix && npm run lint -- --fix",
         "build": "npm ci && npm audit && npm run lint",
         "start": "npm run build && ts-node src/index.ts",
-        "start:new": "npm run start -- --ignoreRecordsBeforeInclusive=2023-06-28T17:41:35Z"
+        "start:new-only": "npm start -- --ignoreRecordsBeforeInclusive=2023-06-28T17:41:35Z"
     },
     "devDependencies": {
         "@types/lodash.groupby": "^4.6.7",

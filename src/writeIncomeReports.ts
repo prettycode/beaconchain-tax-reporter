@@ -1,15 +1,36 @@
+import { AppConfig } from './main';
 import { CoinTrackingRecord, executionIncomeToCoinTrackingRecord, withdrawalIncomeToCoinTrackingRecord } from './services/cointracking';
 import { ValidatorIncome } from './services/income';
 import { convertToCsv } from './utils/convertToCsv';
 import fs from 'fs';
 
+function getIncomeReportsFilePath(baseFilePath: string, appConfig: AppConfig): string {
+    const datePartOnly = new Date().toISOString().substring(0, 10);
+    const logSafeConfig: Record<string, string> = {
+        runDate: datePartOnly,
+        validatorEthAddress: appConfig.validatorEthAddress,
+        withdrawalsStartEpoch: String(appConfig.withdrawalsStartEpoch),
+        ignoreRecordsBeforeInclusive: String(appConfig.ignoreRecordsBeforeInclusive)
+    };
+
+    return `${baseFilePath}/${new URLSearchParams(logSafeConfig).toString()}`;
+}
+
 export async function writeIncomeReports(
-    filePath: string,
+    appConfig: AppConfig,
     validatorIndices: Array<number>,
     withdrawals: Array<ValidatorIncome>,
     executions: Array<ValidatorIncome>,
     withdrawalsAndExecutions: Array<ValidatorIncome>
 ): Promise<void> {
+    const baseFilePath = '.income-reports';
+
+    if (!fs.existsSync(baseFilePath)) {
+        fs.mkdirSync(baseFilePath);
+    }
+
+    const filePath = getIncomeReportsFilePath(baseFilePath, appConfig);
+
     if (fs.existsSync(filePath)) {
         fs.rmSync(filePath, {
             recursive: true,

@@ -6,7 +6,7 @@ const CACHE_PATH = './.cache';
 const memoryCache: Record<string, string> = {};
 
 const urlPathToSafeFilename = (urlPath: string): string => encodeURIComponent(urlPath); //urlPath.replace(/[?\/:*"<>|]/g, '#'); // make safe filename on Windows
-const getFilenameSafeCacheKey = (urlPath: string): string => `./${CACHE_PATH}/${urlPathToSafeFilename(urlPath)}.${hashCode(urlPath)}.json`
+const getFilenameSafeCacheKey = (urlPath: string): string => `./${CACHE_PATH}/${urlPathToSafeFilename(urlPath)}.${hashCode(urlPath)}.json`;
 
 if (!fs.existsSync(CACHE_PATH)) {
     fs.mkdirSync(CACHE_PATH);
