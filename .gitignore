@@ -3,3 +3,5 @@ node_modules
 !.gitignore
 !.eslintrc.js
 !.editorconfig
+!.prettierrc.json
+!.eslintignore

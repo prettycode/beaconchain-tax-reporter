@@ -11,8 +11,8 @@ import { parse } from 'ts-command-line-args';
 import dotenv from 'dotenv';
 
 type CommandLineArgs = {
-    withdrawalsStartEpoch?: number,
-    ignoreRecordsBeforeInclusive?: string
+    withdrawalsStartEpoch?: number;
+    ignoreRecordsBeforeInclusive?: string;
 };
 
 export type AppConfig = {
@@ -74,17 +74,15 @@ export async function main(): Promise<void> {
 
     console.log('Configuration =', appConfig);
 
-    const {
-        beaconchainApiKey,
-        validatorEthAddress,
-        withdrawalsStartEpoch,
-        ignoreRecordsBeforeInclusive
-    } = appConfig;
+    const { beaconchainApiKey, validatorEthAddress, withdrawalsStartEpoch, ignoreRecordsBeforeInclusive } = appConfig;
 
-    const filterByStartDateExclsuive = (incomeRecord: ValidatorIncome): boolean => new Date(incomeRecord.timestamp).getTime() > ignoreRecordsBeforeInclusive;
+    const filterByStartDateExclsuive = (incomeRecord: ValidatorIncome): boolean =>
+        new Date(incomeRecord.timestamp).getTime() > ignoreRecordsBeforeInclusive;
     const latestFinalizedEpoch = (await getEpoch(beaconchainApiKey, 'finalized')).epoch;
     const validatorIndices = await getValidatorIndicesForEthAddress(beaconchainApiKey, validatorEthAddress);
-    const withdrawals = (await getValidatorWithdrawals(beaconchainApiKey, withdrawalsStartEpoch, validatorIndices, latestFinalizedEpoch)).filter(filterByStartDateExclsuive);
+    const withdrawals = (
+        await getValidatorWithdrawals(beaconchainApiKey, withdrawalsStartEpoch, validatorIndices, latestFinalizedEpoch)
+    ).filter(filterByStartDateExclsuive);
     const executions = (await getValidatorExecutions(beaconchainApiKey, validatorIndices)).filter(filterByStartDateExclsuive);
     const withdrawalsAndExecutions = [...withdrawals, ...executions];
 
