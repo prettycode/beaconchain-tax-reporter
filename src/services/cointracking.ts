@@ -14,7 +14,11 @@ export type CoinTrackingRecord = {
     date: string;
 };
 
-function createCoinTrackingRecordFromValidatorIncome(amountEth: number, date: string, comment: string): CoinTrackingRecord {
+function createCoinTrackingRecordFromValidatorIncome(
+    amountEth: number,
+    date: string,
+    comment: string
+): CoinTrackingRecord {
     return {
         type: 'Income',
         inAmount: amountEth,

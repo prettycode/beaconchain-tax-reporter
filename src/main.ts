@@ -83,7 +83,9 @@ export async function main(): Promise<void> {
     const withdrawals = (
         await getValidatorWithdrawals(beaconchainApiKey, withdrawalsStartEpoch, validatorIndices, latestFinalizedEpoch)
     ).filter(filterByStartDateExclsuive);
-    const executions = (await getValidatorExecutions(beaconchainApiKey, validatorIndices)).filter(filterByStartDateExclsuive);
+    const executions = (await getValidatorExecutions(beaconchainApiKey, validatorIndices)).filter(
+        filterByStartDateExclsuive
+    );
     const withdrawalsAndExecutions = [...withdrawals, ...executions];
 
     withdrawals.sort(sortValidatorIncomeByTimestampDesc);
