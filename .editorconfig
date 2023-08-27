@@ -1,6 +1,10 @@
-[*]
-max_line_length = 140
-guidelines = 140
-guidelines_style = 1px solid 40ff0000
-indent_style = space
+root = true
+
+[*.*]
+charset = utf-8
 indent_size = 4
+indent_style = space
+insert_final_newline = true
+max_line_length = 120
+quote_type = single
+trim_trailing_whitespace = true

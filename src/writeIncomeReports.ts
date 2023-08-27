@@ -1,5 +1,9 @@
 import { AppConfig } from './main';
-import { CoinTrackingRecord, executionIncomeToCoinTrackingRecord, withdrawalIncomeToCoinTrackingRecord } from './services/cointracking';
+import {
+    CoinTrackingRecord,
+    executionIncomeToCoinTrackingRecord,
+    withdrawalIncomeToCoinTrackingRecord
+} from './services/cointracking';
 import { ValidatorIncome } from './services/income';
 import { convertToCsv } from './utils/convertToCsv';
 import fs from 'fs';
@@ -97,12 +101,17 @@ export async function writeIncomeReportValidatorWithdrawalsAndExecutions(
 
     for (const validatorIndex of validatorIndices) {
         const filename = `${filePath}/${validatorIndex}.csv`;
-        const fileContents = convertToCsv(withdrawalsAndExecutions.filter((income) => income.validatorIndex === validatorIndex));
+        const fileContents = convertToCsv(
+            withdrawalsAndExecutions.filter((income) => income.validatorIndex === validatorIndex)
+        );
 
         await fs.promises.writeFile(filename, fileContents);
     }
 
-    await fs.promises.writeFile(`${filePath}/${validatorIndices.join(',')}.csv`, convertToCsv(withdrawalsAndExecutions));
+    await fs.promises.writeFile(
+        `${filePath}/${validatorIndices.join(',')}.csv`,
+        convertToCsv(withdrawalsAndExecutions)
+    );
 }
 
 export async function writeIncomeReportCombinedValidatorTaxes(

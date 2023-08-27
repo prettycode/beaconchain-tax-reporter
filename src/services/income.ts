@@ -43,7 +43,11 @@ export async function getValidatorWithdrawals(
         )} between epochs ${startingEpoch} and ${endEpoch} (inclusive)...`
     );
 
-    for (let currentEpoch = startingEpoch; currentEpoch <= endEpoch + EPOCHS_PER_API_REQUEST; currentEpoch += EPOCHS_PER_API_REQUEST) {
+    for (
+        let currentEpoch = startingEpoch;
+        currentEpoch <= endEpoch + EPOCHS_PER_API_REQUEST;
+        currentEpoch += EPOCHS_PER_API_REQUEST
+    ) {
         const withdrawals = await getWithdrawals(authKey, validatorIndices, currentEpoch);
 
         for (const withdrawal of withdrawals) {
@@ -89,7 +93,10 @@ export async function getValidatorWithdrawals(
     return withdrawalHistory;
 }
 
-export async function getValidatorExecutions(authKey: string, validatorIndices: Array<number>): Promise<Array<ValidatorIncome>> {
+export async function getValidatorExecutions(
+    authKey: string,
+    validatorIndices: Array<number>
+): Promise<Array<ValidatorIncome>> {
     console.log(`\nLooking for block production payouts for validator(s) ${join(validatorIndices)}...`);
 
     const executions = await getProduced(authKey, validatorIndices);
